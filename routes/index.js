@@ -4,6 +4,10 @@ var router = express.Router();
 var pg = require('pg')
 var connectionString = process.env.DATABASE_URL || 'postgress://localhost:5432/sociogram';
 
+router.get('/',function(req,res){
+  res.render('index');
+})
+
 router.get('/getuserlist/:name', function(req, res) {
 
 	var userName = req.params.name;
@@ -79,7 +83,7 @@ router.get('/getfriendlist/:user', function(req, res) {
 });
 
 router.post('/signup',function(req,res) {
-	
+	s
 	pg.connect(connectionString, function (err, client, done) {
 
 		var userInfo = req.body;
@@ -157,7 +161,7 @@ router.post('/contribute',function (req,res){
 		}
 		var query = client.query('INSERT INTO contributions (user_from, user_to, attribute_name, quantity) '
 								+ `VALUES ('${user_from}','${user_to}','${attribute_name}',${quantity})`
-							
+							 
 							);
 
 		var data = [];
