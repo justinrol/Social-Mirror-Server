@@ -17,7 +17,7 @@ router.get('/getuserlist/:name', function(req, res) {
 			return res.status(500).json({success:false, data: err});
 		}
 
-		var query = client.query(`SELECT name FROM users WHERE name ILIKE '%${userName}%	'`);
+		var query = client.query(`SELECT name FROM users WHERE name ILIKE '%${userName}%'`);
 
 		query.on('row', function(row){
 			results.push(row)
@@ -156,8 +156,7 @@ router.post('/contribute',function (req,res){
 			return res.status(500).json({success:false,data:err});
 		}
 		var query = client.query('INSERT INTO contributions (user_from, user_to, attribute_name, quantity) '
-								+ ' VALUES ('
-								+ `'${user_from}','${user_to}','${attribute_name}',${quantity}`)`
+								+ `VALUES ('${user_from}','${user_to}','${attribute_name}',${quantity})`
 							
 							);
 
