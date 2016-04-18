@@ -41,11 +41,11 @@ router.get('/getuserdetail/:user',function (req, res){
 		var results=  [];
 		if (err) {
 			done(); 
+            console.log(err);
 			return res.status(500).json({success:false, data:err});
 		}
 
-		var query = client.query(`SELECT username, name, friends, gender, age FROM 'users'
-									WHERE username = '${myUser}'`);
+		var query = client.query(`SELECT username, name, friends, gender, age FROM users WHERE username = '${myUser}'`);
 
 		query
 		.on('row',function(row){
@@ -83,7 +83,7 @@ router.get('/getfriendlist/:user', function(req, res) {
 });
 
 router.post('/signup',function(req,res) {
-	s
+
 	pg.connect(connectionString, function (err, client, done) {
 
 		var userInfo = req.body;
@@ -103,7 +103,7 @@ router.post('/signup',function(req,res) {
 		var query = client.query(`INSERT INTO users (`
 									+ 'username, name, encrypted_password, email'
 									+ ') VALUES ('
-									+ `'${values[4]}','${values[0]}','${values[1]}','${values[2]}','${values[3]}'`
+									+ `${values[0]}','${values[1]}','${values[2]}','${values[3]}'`
 									+ ')'
 							,function(err, results){
 								if(err) {
