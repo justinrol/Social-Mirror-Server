@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var pg = require('pg')
-var connectionString = process.env.DATABASE_URL || 'postgress://localhost:5432/sociogram';
+var connectionString = process.env.DATABASE_URL ||'postgres://root:sociogram2016@localhost/sociogram'
 
 router.get('/',function(req,res){
   res.render('index');
@@ -122,6 +122,7 @@ router.get('/getstats/:attribute',function(req,res){
 	pg.connect(connectionString, function(err, client, done){
 		if(err){
 			done();
+			console.log(err);
 			return res.status(500).json({success:false, data:err});
 		}
 
