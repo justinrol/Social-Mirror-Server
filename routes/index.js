@@ -140,20 +140,6 @@ router.get('/getstats/:attribute',function(req,res){
 	})
 })
 
-router.get('/userinfo/:username',function(req,res){
-  
-  var userName = req.params.username;
-  
-  pg.connect(connectionString,function(err,client,done) {
-      if(err){
-			done();
-			return res.status(500).json({success:false, data:err});
-		}
-    
-      var query = client.query*'SELECT'
-  })
-  
-})
 
 router.post('/contribute',function (req,res){
 	

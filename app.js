@@ -35,9 +35,6 @@ app.use(function(req, res, next) {
 
 //authentications
 //Is it mobile?
-app.use(function(req,res,next){
-  
-})
 
 // error handlers
 
