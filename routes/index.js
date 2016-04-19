@@ -64,7 +64,7 @@ router.post('/signup',function(req,res) {
 router.post('/post',function(req,res){
 	var d = req.body; // details
 	var columns = 'date, author, recipient, content, is_private, agree, disagree';
-	var params = `'${d.date}','${d.author}','${d.recipient}','${d.content}','p${d.is_private}','${d.agree}','${d.disagree}'`;
+	var params = `'${d.date}','${d.author}','${d.recipient}','${d.content}','${d.is_private}','${d.agree}','${d.disagree}'`;
 
 	console.log(d);
 
