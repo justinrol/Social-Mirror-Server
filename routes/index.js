@@ -180,7 +180,9 @@ router.get('/userStats/:username/:attribute',function(req,res){
 			data.push(row);
 		})
 		.on('end',function(){
-			return res.json(data);
+			let att = data[0].attribute_name;
+
+			return res.json(att);
 		})
 
 	})
