@@ -176,10 +176,6 @@ router.get('/userStats/:username/:attribute',function(req,res){
 		var data = [];
 
 		query
-		.on('error',function(err){
-			done();
-			return res.json(500).json({success:false,data:err});
-		})
 		.on('row',function(row){
 			data.push(row);
 		})
