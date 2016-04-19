@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var pg = require('pg')
-var connectionString = process.env.DATABASE_URL ||'postgres://root:sociogram2016@139.59.162.2/sociogram'
+var connectionString = process.env.DATABASE_URL ||'postgres://root:sociogram2016@localhost/sociogram'
 
 router.get('/',function(req,res){
   res.render('index');
