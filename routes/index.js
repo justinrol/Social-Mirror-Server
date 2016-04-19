@@ -145,6 +145,9 @@ router.get('/getstats/:attribute',function(req,res){
 	})
 })
 
+router.get('/attributelist',function(req,res){
+	res.json({'Extraversion','Honest','Descent','Charming','Generous','Kind','Confident','Flexible','Modest','Relaxed'});
+});
 
 router.post('/contribute',function (req,res){
 	
