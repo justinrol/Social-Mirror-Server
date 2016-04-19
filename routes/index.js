@@ -160,6 +160,31 @@ router.get('/attributelist',function(req,res){
 		"Relaxed"]);
 });
 
+router.get('/userStats/:username/:attribute',function(req,res){
+	var user = req.body.username;
+	var attribute_name = req.body.attribute;
+
+	pg.connect(connectionString,function(err, client, done){
+		if(err){
+			done();
+			return res.json(500).json({success:false,data:err});
+		}
+		var query = client.query(`SELECT ${attribute_name} 
+									FROM avg_user_attributes 
+									WHERE username = '${user}'`);
+
+		var data = [];
+
+		query.on('row',function(row){
+			data.push(row);
+		})
+		.on('end',function(){
+			return res.json(data);
+		})
+
+	})
+})
+
 router.post('/contribute',function (req,res){
 	
 	var user_from = req.body.user_from;
