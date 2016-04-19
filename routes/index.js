@@ -161,8 +161,8 @@ router.get('/attributelist',function(req,res){
 });
 
 router.get('/userStats/:username/:attribute',function(req,res){
-	var user = req.body.username;
-	var attribute_name = req.body.attribute;
+	var user = req.params.username;
+	var attribute_name = req.params.attribute;
 
 	pg.connect(connectionString,function(err, client, done){
 		if(err){
