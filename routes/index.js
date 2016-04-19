@@ -134,9 +134,11 @@ router.get('/getstats/:attribute',function(req,res){
 			data.push(row);
 		})
 		.on('end',function(){
+			console.log(data);
 			var avg = get_mean (data);
+			console.log(avg);
 			var variance = get_variance (data);
-			var std_deviation = Math.sqrt(variance);
+			var std_deviation = Math.sqrt(variance).toFixed(3);
 			return res.json({attribute : `${myAttribute}`,
 							mean : avg, 
 							variance : variance, 
@@ -203,19 +205,29 @@ router.post('/contribute',function (req,res){
 
 function get_mean(arr){
 	var sum = 0;
+	console.log(arr);
 	for(var elem in arr){
-		sum += elem;
+		elem = arr[elem];
+		for(var key in elem){
+			sum += elem[key];	
+		}
 	}
-	return sum / arr.length;
+	
+	return (sum / arr.length).toFixed(3);
 }
 
 function get_variance(arr){
 	var sum = 0;
 	var avg = get_mean ( arr );
 	for(var elem in arr) {
-		sum += (elem - avg) * (elem - avg);
+		elem = arr[elem];
+		for(var key in elem){
+		
+		sum += (elem[key] - avg) * (elem[key] - avg);
+		
+		}
 	}
-	return sum / arr.length;
+	return (sum / arr.length).toFixed(3);
 }
 
 
