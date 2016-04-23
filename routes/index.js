@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
 
-var pg = require('pg')
-var connectionString = process.env.DATABASE_URL ||'postgres://root:sociogram2016@localhost/sociogram'
+var moment = require('moment');
 
+var pg = require('pg')
+var connectionString = process.env.DATABASE_URL ||'postgres://root:sociogram2016@139.59.162.2/sociogram'
+// var connectionString = process.env.DATABASE_URL ||'postgres://root:sociogram2016@localhost/sociogram'
 router.get('/',function(req,res){
   res.render('index');
 })
@@ -25,6 +27,49 @@ var db_query = function(query_string,res){
 			});
 	})
 }
+router.post('/login',function(req,res){
+	console.log(req.body);
+	var username = req.body.username;
+	var password = req.body.password;
+
+	console.log(username);
+
+	pg.connect(connectionString,function(err,client,done){
+		if(err){
+			done(); return res.status(500).json({success:false,data:err});
+		}
+		
+		var data = [];
+	
+		var query = client.query(`SELECT username FROM users where username = '${username}' AND encrypted_password = '${password}'`);
+		query.on('row',function(row){
+			data.push(row);
+		}).on('end',function(){
+			console.log(data);
+			if(data.length == 0){
+
+				return res.json({success:false}); 
+			} else 
+				var randomString = "dummy dum dum"
+				var time = moment().add(30,'minutes').format('YYYY-MM-DD h:mm:ss ');
+				console.log(time);
+				var columns = 'username, sessionid, expire_time';
+				var params = `'Steezy','randomString','${time}'`;
+
+				var session_data = [];
+				var session_query = client.query('INSERT INTO session ( ' + columns + ' ) VALUES ( ' + params + ')');
+					session_query.on('error',function(err){
+						console.log(err);
+					}).on('row',function(row){
+						session_data.push(row);
+					}).on('end',function(){
+						console.log(session_data);
+					})
+				return res.json({success:true});
+			console.log('ended');
+		})
+	})
+})
 
 router.get('/getuserlist/:user', function(req, res) {
 
@@ -64,7 +109,7 @@ router.post('/signup',function(req,res) {
 router.post('/post',function(req,res){
 	var d = req.body; // details
 	var columns = 'date, author, recipient, content, is_private, agree, disagree';
-	var params = `'${d.date}','${d.author}','${d.recipient}','${d.content}','p${d.is_private}','${d.agree}','${d.disagree}'`;
+	var params = `'${d.date}','${d.author}','${d.recipient}','${d.content}','${d.is_private}','${d.agree}','${d.disagree}'`;
 
 	console.log(d);
 
@@ -176,7 +221,6 @@ router.post('/contribute',function (req,res){
 		});
 	});
 });
-
 
 
 function get_mean(arr){
