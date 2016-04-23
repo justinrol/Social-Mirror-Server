@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -33,8 +35,8 @@ app.use(function(req, res, next) {
 });
 
 
+
 //authentications
-//Is it mobile?
 
 // error handlers
 
