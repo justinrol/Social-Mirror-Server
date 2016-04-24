@@ -13,17 +13,21 @@ router.get('/',function(req,res){
 var db_query = function(query_string,res){
 	pg.connect(connectionString, function(err, client, done){
 		if(err){
+			console.log(err);
 			done(); return res.status(500).json({ success : false , data : err });
 		}
 
 		var data = [];
 		var query = client.query(`${query_string}`);
-
+		
+		console.log(query);
 		query.on('row',function(row){
 			data.push(row);
 			}).on('end',function(){
 				done();
 				return res.json(data);
+			}).on('error',function(err){
+				res.status(500).json({success:false,data:err});
 			});
 	})
 }
@@ -98,11 +102,13 @@ router.get('/getfriendlist/:user', function(req, res) {
 router.post('/signup',function(req,res) {
 
 	var user = req.body;
+
+	console.log(user);
 	var columns = 'username, name, encrypted_password, email, gender, age';
 	var params = `'${user.username}','${user.name}','${user.password}','${user.email}','${user.gender}','${user.age}'`
 
 	var query_string = 'INSERT INTO users ( ' + columns + ' ) VALUES ( ' + params + ' )';
-
+	console.log(query_string);
 	db_query(query_string,res);
 });
 
