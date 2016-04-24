@@ -102,7 +102,7 @@ router.post('/signup',function(req,res) {
 	var params = `'${user.username}','${user.name}','${user.password}','${user.email}','${user.gender}','${user.age}'`
 
 	var query_string = 'INSERT INTO users ( ' + columns + ' ) VALUES ( ' + params + ' )';
-
+	console.log(query_string);
 	db_query(query_string,res);
 });
 
@@ -172,18 +172,9 @@ router.get('/userstats/:username/:attribute',function(req,res){
 			done();
 			return res.json(500).json({success:false,data:err});
 		}
-		var query = client.query(`SELECT ${attribute} 
-									FROM avg_user_attributes 
-									WHERE username = '${user}'`);
-		var data = [];
-		query
-		.on('row',function(row){
-			data.push(row);
-		})
-		.on('end',function(){
-			var att = data[0];
-			return res.json(att);
-		})
+
+		var query_string = `SELECT ${attribute} FROM avg_user_attributes WHERE username = '${user}'`;
+		db_query(query_string,res);
 	})
 })
 
