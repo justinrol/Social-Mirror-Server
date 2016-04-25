@@ -86,7 +86,7 @@ router.get('/getuserlist/:user', function(req, res) {
 router.get('/getuserdetail/:user',function (req, res){
 
 	var user = req.params.user;
-	var query_string = `SELECT username, name, friends, gender, age FROM users WHERE username = '${user}'`;
+	var query_string = `SELECT username, name, gender, age FROM users WHERE username = '${user}'`;
 
 	db_query(query_string,res);
 });
@@ -94,7 +94,7 @@ router.get('/getuserdetail/:user',function (req, res){
 router.get('/getfriendlist/:user', function(req, res) {
 	
 	var user = req.params.user;
-	var query_string = `SELECT username,friends FROM users WHERE username = '${user}'`;
+	var query_string = `SELECT visible_to FROM friends WHERE username = '${user}'`;
 
 	db_query(query_string,res);
 });
@@ -124,13 +124,13 @@ router.post('/post',function(req,res){
 	db_query(query_string,res);  
 })
 
-router.post('/post-from',function(req,res){
+router.post('/friend-post',function(req,res){
 	var d = req.body;
-	var columns = 'date, recipient, content, is_private, agree, disagree';
-	var query_string = `SELECT ` + columns + ` FROM posts WHERE author = '${d.author}'`
-
-	db_query(query_string,res);
-})
+	var query_string = 'SELECT content, agree, disagree FROM posts INNER JOIN friends ON (posts.author = friends.username) ' +
+						'WHERE is_private = false AND ' +
+						`friends.visible_to = '${d.user}' order by date`
+	db_query(query_string,res);	
+});
 
 router.post('/post-to',function(req,res){
 	var d = req.body;
