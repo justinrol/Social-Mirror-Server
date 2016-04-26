@@ -9,8 +9,6 @@ var fs = require('fs');
 var accessLogStream = fs.createWriteStream(__dirname + '/access.log', {flags: 'a'});
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
-
 var app = express();
 
 // view engine setup
@@ -25,8 +23,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/users', users);
+app.use(function(req,res,next) {
+	console.log(req.method + " @ " + req.url);
+	console.log("Request Body :");
+	console.log(req.body);
+	next();
+});
+
+app.use('/',routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -20,7 +20,8 @@ var db_query = function(query_string,res){
 		var data = [];
 		var query = client.query(`${query_string}`);
 		
-		console.log(query);
+		console.log(query_string);
+		console.log("\n");
 		query.on('row',function(row){
 			data.push(row);
 			}).on('end',function(){
@@ -32,11 +33,11 @@ var db_query = function(query_string,res){
 	})
 }
 router.post('/login',function(req,res){
-	console.log(req.body);
+	
 	var username = req.body.username;
 	var password = req.body.password;
 
-	console.log(username);
+	console.log(`User attempting login with username : ${username} and ${password}`);
 
 	pg.connect(connectionString,function(err,client,done){
 		if(err){
@@ -78,7 +79,7 @@ router.post('/login',function(req,res){
 router.get('/getuserlist/:user', function(req, res) {
 
 	var user = req.params.user;
-	var query_string = `SELECT username FROM users WHERE name ILIKE '%${user}%'`;
+	var query_string = `SELECT username,name,email,gender,age FROM users WHERE name ILIKE '%${user}%'`;
 
 	db_query(query_string,res);
 });
@@ -108,7 +109,6 @@ router.post('/signup',function(req,res) {
 	var params = `'${user.username}','${user.name}','${user.password}','${user.email}','${user.gender}','${user.age}'`
 
 	var query_string = 'INSERT INTO users ( ' + columns + ' ) VALUES ( ' + params + ' )';
-	console.log(query_string);
 	db_query(query_string,res);
 });
 
@@ -117,14 +117,12 @@ router.post('/post',function(req,res){
 	var columns = 'date, author, recipient, content, is_private, agree, disagree';
 	var params = `'${d.date}','${d.author}','${d.recipient}','${d.content}','${d.is_private}','${d.agree}','${d.disagree}'`;
 
-	console.log(d);
-
 	var query_string = 'INSERT INTO posts ( ' + columns + ' ) VALUES ( ' + params + ' )';
 
 	db_query(query_string,res);  
 })
 
-router.post('/friend-post',function(req,res){
+router.post('/friendpost',function(req,res){
 	var d = req.body;
 	var query_string = 'SELECT content, agree, disagree FROM posts INNER JOIN friends ON (posts.author = friends.username) ' +
 						'WHERE is_private = false AND ' +
@@ -132,7 +130,7 @@ router.post('/friend-post',function(req,res){
 	db_query(query_string,res);	
 });
 
-router.post('/post-to',function(req,res){
+router.post('/postto',function(req,res){
 	var d = req.body;
 	var columns = 'date, author, content, is_private, agree, disagree';
 	var query_string = `SELECT ` + columns + ` FROM posts WHERE recipient = '${d.recipient}'`
