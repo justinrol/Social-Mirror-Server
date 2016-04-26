@@ -133,10 +133,10 @@ router.post('/friendpost',function(req,res){
 router.post('/postto',function(req,res){
 	var d = req.body;
 	var columns = 'date, author, content, is_private, agree, disagree';
-	var query_string = `SELECT ` + columns + ` FROM posts WHERE recipient = '${d.recipient}'`
+	var query_string = `SELECT ` + columns + ` FROM posts WHERE recipient = '${d.user}'`
 
 	db_query(query_string,res);
-})
+});
 
 router.get('/getstats/:att',function(req,res){
 
