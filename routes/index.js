@@ -4,8 +4,8 @@ var router = express.Router();
 var moment = require('moment');
 
 var pg = require('pg')
-var connectionString = process.env.DATABASE_URL ||'postgres://root:sociogram2016@139.59.162.2/sociogram'
-// var connectionString = process.env.DATABASE_URL ||'postgres://root:sociogram2016@localhost/sociogram'
+// var connectionString = process.env.DATABASE_URL ||'postgres://root:sociogram2016@139.59.162.2/sociogram'
+var connectionString = process.env.DATABASE_URL ||'postgres://root:sociogram2016@localhost/sociogram'
 router.get('/',function(req,res){
   res.render('index');
 })
@@ -150,7 +150,7 @@ router.get('/getstats/:att',function(req,res){
 			return res.status(500).json({success:false, data:err});
 		}
 
-		var query = client.query(`SELECT ${myAttribute} FROM avg_user_attributes`);
+		var query = client.query(`SELECT ${att} FROM avg_user_attributes`);
 		var data = [];
 		query.on('row',function(row){
 			data.push(row);
@@ -161,7 +161,7 @@ router.get('/getstats/:att',function(req,res){
 			
 			var variance = get_variance (data);
 			var std_deviation = Math.sqrt(variance).toFixed(3);
-			return res.json({attribute : `${myAttribute}`,
+			return res.json({attribute : `${att}`,
 							mean : avg, 
 							variance : variance, 
 							std_deviation : std_deviation});
