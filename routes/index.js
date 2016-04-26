@@ -124,7 +124,8 @@ router.post('/post',function(req,res){
 
 router.post('/friendpost',function(req,res){
 	var d = req.body;
-	var query_string = 'SELECT content, agree, disagree FROM posts INNER JOIN friends ON (posts.author = friends.username) ' +
+	var columns = 'id, content, agree, disagree';
+	var query_string = 'SELECT '+ columns +' FROM posts INNER JOIN friends ON (posts.author = friends.username) ' +
 						'WHERE is_private = false AND ' +
 						`friends.visible_to = '${d.user}' order by date`
 	db_query(query_string,res);	
@@ -134,6 +135,21 @@ router.post('/postto',function(req,res){
 	var d = req.body;
 	var columns = 'date, author, content, is_private, agree, disagree';
 	var query_string = `SELECT ` + columns + ` FROM posts WHERE recipient = '${d.user}'`
+
+	db_query(query_string,res);
+});
+
+router.post('/publicpostto',function(req,res){
+	var d = req.body;
+	var columns = 'id,date,content,agree,disagree';
+	var query_string = 'SELECT ' + columns + ` FROM posts WHERE recipient = '${d.user}' AND is_private = 'false' ORDER BY date`;
+
+	db_query(query_string,res);
+});
+
+router.post('/updateprivacy',function(req,res){
+	var d = req.body;
+	var query_string = `UPDATE posts SET is_private = '${d.private}' WHERE id = '${d.id}'`;
 
 	db_query(query_string,res);
 });
@@ -165,7 +181,7 @@ router.get('/getstats/:att',function(req,res){
 							std_deviation : std_deviation});
 		})
 	})
-})
+});
 
 router.get('/userstats/:username/:attribute',function(req,res){
 	var user = req.params.username;
@@ -180,7 +196,7 @@ router.get('/userstats/:username/:attribute',function(req,res){
 		var query_string = `SELECT ${attribute} FROM avg_user_attributes WHERE username = '${user}'`;
 		db_query(query_string,res);
 	})
-})
+});
 
 router.post('/contribute',function (req,res){
 	
