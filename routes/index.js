@@ -133,7 +133,7 @@ router.post('/friendpost',function(req,res){
 
 router.post('/postto',function(req,res){
 	var d = req.body;
-	var columns = 'date, author, content, is_private, agree, disagree';
+	var columns = 'id, date, author, content, is_private, agree, disagree';
 	var query_string = `SELECT ` + columns + ` FROM posts WHERE recipient = '${d.user}'`
 
 	db_query(query_string,res);
@@ -153,6 +153,13 @@ router.post('/updateprivacy',function(req,res){
 
 	db_query(query_string,res);
 });
+
+router.post('/addfriend',function(req,res){
+	var d = req.body;
+	var query_string = `INSERT INTO friends ( username , visible_to ) VALUES ( '${d.username}', '${d.friend}'`;
+
+	db_query(query_string,res);
+})
 
 router.get('/getstats/:att',function(req,res){
 
