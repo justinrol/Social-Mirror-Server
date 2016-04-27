@@ -164,6 +164,20 @@ router.post('/addfriend',function(req,res){
 	var query_string = `INSERT INTO friends ( username , visible_to ) VALUES ( '${d.username}', '${d.visible_to}')`;
 
 	db_query(query_string,res);
+});
+
+router.post('/addcustomfeature',function(req,res){
+	var d= req.body;
+	var query_string = `INSERT INTO custom_features (username, feature) VALUES ('${d.username}', '${d.feature}')`
+
+	db_query(query_string,res);
+});
+
+router.post('/getcustomfeatures',function(req,res){
+	var d= req.body;
+	var query_string = `SELECT feature FROM custom_features WHERE username = '${d.username}'`
+
+	db_query(query_string,res);
 })
 
 router.get('/getstats/:att',function(req,res){
