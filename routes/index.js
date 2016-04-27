@@ -22,13 +22,13 @@ var db_query = function(query_string,res){
 		
 		console.log(query_string);
 		console.log("\n");
-		query.on('row',function(row){
-			data.push(row);
+		query.on('error',function(err){
+				return res.status(500).json({success:false,data:err});
+			}).on('row',function(row){
+				data.push(row);
 			}).on('end',function(){
 				done();
 				return res.json(data);
-			}).on('error',function(err){
-				res.status(500).json({success:false,data:err});
 			});
 	})
 }
@@ -214,6 +214,9 @@ router.get('/getstats/:att',function(req,res){
 							variance : variance, 
 							std_deviation : std_deviation});
 		})
+		.on('error',function(err){
+			res.status(500).json({success:false,data:err});
+		})
 	})
 });
 
@@ -248,7 +251,10 @@ router.post('/contribute',function (req,res){
 								+ `VALUES ('${user_from}','${user_to}','${attribute}',${quantity})`);
 		var data = [];
 		var update_query = client.query('SELECT user_to, attribute FROM contributions');
-		update_query.on('row',function(row){
+		update_query.on('error',function(err){
+			return res.status(500).json({success:false, data:err})
+		})
+		.on('row',function(row){
 			data.push(row);
 		})
 		.on('end',function(){
