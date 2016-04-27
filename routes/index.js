@@ -154,6 +154,13 @@ router.post('/updateprivacy',function(req,res){
 	db_query(query_string,res);
 });
 
+router.post('/addfriend',function(req,res){
+	var d = req.body;
+	var query_string = `INSERT INTO friends ( username , visible_to ) VALUES ( '${d.username}', '${d.friend}'`;
+
+	db_query(query_string,res);
+})
+
 router.get('/getstats/:att',function(req,res){
 
 	var att = req.params.att;
