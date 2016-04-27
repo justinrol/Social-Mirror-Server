@@ -32,6 +32,11 @@ var db_query = function(query_string,res){
 			});
 	})
 }
+
+router.get('/dbserver',function(req,res){
+	res.json({success:true, message: "I'm turned on.."});
+})
+
 router.post('/login',function(req,res){
 	
 	var username = req.body.username;
@@ -156,7 +161,7 @@ router.post('/updateprivacy',function(req,res){
 
 router.post('/addfriend',function(req,res){
 	var d = req.body;
-	var query_string = `INSERT INTO friends ( username , visible_to ) VALUES ( '${d.username}', '${d.friend}'`;
+	var query_string = `INSERT INTO friends ( username , visible_to ) VALUES ( '${d.username}', '${d.visible_to}')`;
 
 	db_query(query_string,res);
 })
