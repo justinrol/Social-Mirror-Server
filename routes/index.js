@@ -124,7 +124,7 @@ router.post('/post',function(req,res){
 
 router.post('/friendpost',function(req,res){
 	var d = req.body;
-	var columns = 'id, content, agree, disagree';
+	var columns = 'posts.id, content, agree, disagree';
 	var query_string = 'SELECT '+ columns +' FROM posts INNER JOIN friends ON (posts.author = friends.username) ' +
 						'WHERE is_private = false AND ' +
 						`friends.visible_to = '${d.user}' order by date`
@@ -133,7 +133,7 @@ router.post('/friendpost',function(req,res){
 
 router.post('/postto',function(req,res){
 	var d = req.body;
-	var columns = 'date, author, content, is_private, agree, disagree';
+	var columns = 'id, date, author, content, is_private, agree, disagree';
 	var query_string = `SELECT ` + columns + ` FROM posts WHERE recipient = '${d.user}'`
 
 	db_query(query_string,res);
