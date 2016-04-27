@@ -79,7 +79,7 @@ router.post('/login',function(req,res){
 router.get('/getuserlist/:user', function(req, res) {
 
 	var user = req.params.user;
-	var query_string = `SELECT username,name,email,gender,age FROM users WHERE name ILIKE '%${user}%'`;
+	var query_string = `SELECT username,name,email,gender,age FROM users WHERE (name ILIKE '%${user}%' ) OR (username ILIKE '%${user}%')`;
 
 	db_query(query_string,res);
 });
@@ -174,6 +174,14 @@ router.post('/getcustomfeatures',function(req,res){
 
 	db_query(query_string,res);
 })
+
+router.post('/getallfeatures',function(req,res){
+	var d= req.body;
+	var columns_1 = 'avg_user_attributes.* ,custom_features.feature, custom_features.agree, custom_features.disagree '
+	var query_string = 'SELECT ' + columns_1 + ' FROM avg_user_attributes LEFT JOIN custom_features ON '+
+	'(avg_user_attributes.username = custom_features.username)' +
+	(`AND (avg_user_attributes.username = '${d.username}')`);
+});
 
 router.get('/getstats/:att',function(req,res){
 
