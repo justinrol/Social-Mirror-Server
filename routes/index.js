@@ -267,6 +267,15 @@ router.post('/contribute',function (req,res){
 	});
 });
 
+router.post('/update-agree',function(req,res){
+	var d= req.body;
+	var query_string = `UPDATE posts SET agree = agree + 1 WHERE id = ${d.id}`;
+})
+
+router.post('/update-disagree',function(req,res){
+	var d = req.body;
+	var query_string = `UPDATE posts SET disagree = disagree + 1 WHERE id = ${d.id}`
+})
 
 function get_mean(arr){
 	var sum = 0;
