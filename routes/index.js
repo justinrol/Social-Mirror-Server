@@ -13,22 +13,22 @@ router.get('/',function(req,res){
 var db_query = function(query_string,res){
 	pg.connect(connectionString, function(err, client, done){
 		if(err){
-			console.log(err);
+			// console.log(err);
 			done(); return res.status(500).json({ success : false , data : err });
 		}
 
 		var data = [];
 		var query = client.query(`${query_string}`);
 		
-		console.log(query_string);
-		console.log("\n");
+		// console.log(query_string);
+		// console.log("\n");
 		query.on('error',function(err){
 				return res.status(500).json({success:false,data:err});
 			}).on('row',function(row){
 				data.push(row);
 			}).on('end',function(){
 				done();
-				console.log()
+				// console.log()
 				return res.json(data);
 			});
 	})
@@ -43,7 +43,7 @@ router.post('/login',function(req,res){
 	var username = req.body.username;
 	var password = req.body.password;
 
-	console.log(`User attempting login with username : ${username} and ${password}`);
+	// console.log(`User attempting login with username : ${username} and ${password}`);
 
 	pg.connect(connectionString,function(err,client,done){
 		if(err){
@@ -56,7 +56,7 @@ router.post('/login',function(req,res){
 		query.on('row',function(row){
 			data.push(row);
 		}).on('end',function(){
-			console.log(data);
+			// console.log(data);
 			if(data.length == 0){
 				return res.json({success:false}); 
 			} else 
@@ -94,7 +94,7 @@ router.post('/signup',function(req,res) {
 
 	var user = req.body;
 
-	console.log(user);
+	// console.log(user);
 	var columns = 'username, name, encrypted_password, email, gender, age';
 	var params = `'${user.username}','${user.name}','${user.password}','${user.email}','${user.gender}','${user.age}'`
 
@@ -265,28 +265,28 @@ router.post('/contribute',function (req,res){
 			data.push(row);
 		})
 		.on('end',function(){
-			console.log("Data : " + data);
-			console.log("Length : " + data.length);
+			// console.log("Data : " + data);
+			// console.log("Length : " + data.length);
 			if(data.length != 0){
-				console.log("Data not null");
+				// console.log("Data not null");
 				var query = client.query('UPDATE contributions SET quantity = ' + `${quantity} WHERE user_to = '${user_to}' `
 					+` AND user_from = '${user_from}' AND attribute = '${attribute}'`);
 				query.on('error',function(err){
-					console.log("error :" + err);
+					// console.log("error :" + err);
 					done();
 				});
 			} else {
 				var result = [];
-				console.log("data null");
+				// console.log("data null");
 				var query = client.query('INSERT INTO contributions (user_from, user_to, attribute, quantity) '
 								+ `VALUES ('${user_from}','${user_to}','${attribute}',${quantity})`);	
 				query.on('error',function(err){
-					console.log("error :" + err);
+					// console.log("error :" + err);
 					done();
 				}).on('row',function(row){
 					result += row;
 				}).on('end',function(){
-					console.log(result);
+					// console.log(result);
 				})
 			}
 
@@ -302,7 +302,7 @@ router.post('/contribute',function (req,res){
 		})
 		.on('end',function(){
 			var new_mean = get_mean(query_data);
-			console.log("Query data length : ",query_data.length);
+			// console.log("Query data length : ",query_data.length);
 			var update_user_avg = client.query('UPDATE features '
 												+ `SET value = ${new_mean} , opinions = ${query_data.length} `
 												+ `WHERE username = '${user_to}' AND name = '${attribute}'`	
