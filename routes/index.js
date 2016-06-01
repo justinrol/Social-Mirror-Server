@@ -232,7 +232,7 @@ router.post('/contribute',function (req,res){
 			return res.status(500).json({success:false,data:err});
 		}
 		var data = [];
-		var check_query = client.query('SELECT * FROM contributions WHERE ' + `user_from = '${user_from}' AND user_to = '${user_to}'`);
+		var check_query = client.query('SELECT * FROM contributions WHERE ' + `user_from = '${user_from}' AND user_to = '${user_to}' AND attribute = '${attribute}'`);
 		check_query.on('error',function(err){
 			return res.status(500).json({success:false,data:err});
 		})
@@ -240,7 +240,10 @@ router.post('/contribute',function (req,res){
 			data.push(row);
 		})
 		.on('end',function(){
-			if(data != null){
+			console.log("Data : " + data);
+			console.log("Length : " + data.length);
+			if(data.length != 0){
+				console.log("Data not null");
 				var query = client.query('UPDATE contributions SET quantity = ' + `${quantity} WHERE user_to = '${user_to}' `
 					+` AND user_from = '${user_from}' AND attribute = '${attribute}'`);
 				query.on('error',function(err){
@@ -248,18 +251,24 @@ router.post('/contribute',function (req,res){
 					done();
 				});
 			} else {
+				var result = [];
+				console.log("data null");
 				var query = client.query('INSERT INTO contributions (user_from, user_to, attribute, quantity) '
 								+ `VALUES ('${user_from}','${user_to}','${attribute}',${quantity})`);	
 				query.on('error',function(err){
 					console.log("error :" + err);
 					done();
-				});
+				}).on('row',function(row){
+					result += row;
+				}).on('end',function(){
+					console.log(result);
+				})
 			}
 
 		})
 
 		var query_data = [];
-		var update_query = client.query('SELECT quantity FROM contributions '+`WHERE user_to = '${user_to}'`);
+		var update_query = client.query('SELECT quantity FROM contributions '+`WHERE user_to = '${user_to}' AND attribute = '${attribute}'`);
 		update_query.on('error',function(err){
 			return res.status(500).json({success:false, data:err})
 		})
