@@ -170,6 +170,8 @@ router.post('/getallfeatures',function(req,res){
 	var query_string = 'SELECT ' + columns_1 + ' FROM avg_user_attributes LEFT JOIN custom_features ON '+
 	'(avg_user_attributes.username = custom_features.username)' +
 	(`AND (avg_user_attributes.username = '${d.username}')`);
+
+	db_query(query_string,res);
 });
 
 router.get('/getstats/:att',function(req,res){
