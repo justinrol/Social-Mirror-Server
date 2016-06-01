@@ -28,6 +28,7 @@ var db_query = function(query_string,res){
 				data.push(row);
 			}).on('end',function(){
 				done();
+				console.log()
 				return res.json(data);
 			});
 	})
@@ -166,10 +167,7 @@ router.post('/getcustomfeatures',function(req,res){
 
 router.post('/getallfeatures',function(req,res){
 	var d= req.body;
-	var columns_1 = 'avg_user_attributes.* ,custom_features.feature, custom_features.agree, custom_features.disagree '
-	var query_string = 'SELECT ' + columns_1 + ' FROM avg_user_attributes LEFT JOIN custom_features ON '+
-	'(avg_user_attributes.username = custom_features.username)' +
-	(`AND (avg_user_attributes.username = '${d.username}')`);
+	var query_string = `SELECT name, value FROM features WHERE username = '${d.username}'`;
 
 	db_query(query_string,res);
 });
