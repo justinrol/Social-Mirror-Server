@@ -253,16 +253,17 @@ router.post('/contribute',function (req,res){
 				});
 		})
 
-		data = [];
+		var query_data
 		var update_query = client.query('SELECT quantity FROM contributions '+`WHERE user_to = '${user_to}'`);
 		update_query.on('error',function(err){
 			return res.status(500).json({success:false, data:err})
 		})
 		.on('row',function(row){
-			data.push(row);
+			query_data.push(row);
 		})
 		.on('end',function(){
-			var new_mean = get_mean(data);
+			console.log("Query data: " + query_data);
+			var new_mean = get_mean(query_data);
 			console.log("****Mean is : " + new_mean);
 			var update_user_avg = client.query('UPDATE features '
 												+ `SET value = ${new_mean} `
