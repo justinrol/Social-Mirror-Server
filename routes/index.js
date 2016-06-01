@@ -234,7 +234,7 @@ router.post('/contribute',function (req,res){
 		var query = client.query('INSERT INTO contributions (user_from, user_to, attribute, quantity) '
 								+ `VALUES ('${user_from}','${user_to}','${attribute}',${quantity})`);
 		var data = [];
-		var update_query = client.query('SELECT user_to, attribute FROM contributions');
+		var update_query = client.query('SELECT quantity FROM contributions '+`WHERE username = '${user_to}'`);
 		update_query.on('error',function(err){
 			return res.status(500).json({success:false, data:err})
 		})
