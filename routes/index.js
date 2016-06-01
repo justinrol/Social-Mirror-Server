@@ -27,7 +27,6 @@ var db_query = function(query_string,res){
 			}).on('row',function(row){
 				data.push(row);
 			}).on('end',function(){
-				done();
 				// console.log()
 				return res.json(data);
 			});
@@ -224,7 +223,7 @@ router.get('/getstats/:att',function(req,res){
 							std_deviation : std_deviation});
 		})
 		.on('error',function(err){
-			res.status(500).json({success:false,data:err});
+			return res.status(500).json({success:false,data:err});
 		})
 	})
 });
@@ -259,6 +258,7 @@ router.post('/contribute',function (req,res){
 		var data = [];
 		var check_query = client.query('SELECT * FROM contributions WHERE ' + `user_from = '${user_from}' AND user_to = '${user_to}' AND attribute = '${attribute}'`);
 		check_query.on('error',function(err){
+			console.log(err);
 			return res.status(500).json({success:false,data:err});
 		})
 		.on('row',function(row){
@@ -272,7 +272,7 @@ router.post('/contribute',function (req,res){
 				var query = client.query('UPDATE contributions SET quantity = ' + `${quantity} WHERE user_to = '${user_to}' `
 					+` AND user_from = '${user_from}' AND attribute = '${attribute}'`);
 				query.on('error',function(err){
-					// console.log("error :" + err);
+					console.log(err);
 					done();
 				});
 			} else {
@@ -281,7 +281,7 @@ router.post('/contribute',function (req,res){
 				var query = client.query('INSERT INTO contributions (user_from, user_to, attribute, quantity) '
 								+ `VALUES ('${user_from}','${user_to}','${attribute}',${quantity})`);	
 				query.on('error',function(err){
-					// console.log("error :" + err);
+					console.log(err);
 					done();
 				})
 			};
@@ -290,6 +290,7 @@ router.post('/contribute',function (req,res){
 		var query_data = [];
 		var update_query = client.query('SELECT quantity FROM contributions '+`WHERE user_to = '${user_to}' AND attribute = '${attribute}'`);
 		update_query.on('error',function(err){
+			console.log(err);
 			return res.status(500).json({success:false, data:err})
 		})
 		.on('row',function(row){
@@ -303,6 +304,7 @@ router.post('/contribute',function (req,res){
 												+ `WHERE username = '${user_to}' AND name = '${attribute}'`	
 											,function(err,results){
 												if(err) {	
+													console.log(err);
 													return res.status(400).json({success:false});
 												} else {
 													return res.status(200).json({success:true});
