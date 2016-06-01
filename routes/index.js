@@ -17,7 +17,7 @@ var db_query = function(query_string,res){
 			done(); return res.status(500).json({ success : false , data : err });
 		}
 
-		var data = [];
+		var response = [];
 		var query = client.query(`${query_string}`);
 		
 		console.log(query_string);
@@ -25,10 +25,9 @@ var db_query = function(query_string,res){
 		query.on('error',function(err){
 				return res.status(500).json({success:false,data:err});
 			}).on('row',function(row){
-				data.push(row);
+				response.push(row);
 			}).on('end',function(){
-				done();
-				return res.json(data);
+				return res.json({success:true,data:response});
 			});
 	})
 }
@@ -57,26 +56,11 @@ router.post('/login',function(req,res){
 		}).on('end',function(){
 			console.log(data);
 			if(data.length == 0){
-
 				return res.json({success:false}); 
 			} else 
-				var randomString = "dummy dum dum"
-				var time = moment().add(30,'minutes').format('YYYY-MM-DD h:mm:ss ');
-				console.log(time);
 				var columns = 'username, sessionid, expire_time';
 				var params = `'Steezy','randomString','${time}'`;
-
-				var session_data = [];
-				var session_query = client.query('INSERT INTO session ( ' + columns + ' ) VALUES ( ' + params + ')');
-					session_query.on('error',function(err){
-						console.log(err);
-					}).on('row',function(row){
-						session_data.push(row);
-					}).on('end',function(){
-						console.log(session_data);
-					})
 				return res.json({success:true});
-			console.log('ended');
 		})
 	})
 })
