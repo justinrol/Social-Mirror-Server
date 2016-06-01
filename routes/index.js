@@ -243,7 +243,7 @@ router.post('/contribute',function (req,res){
 		})
 		.on('end',function(){
 			var new_mean = get_mean(data);
-			var update_user_avg = client.query('UPDATE avg_user_attributes '
+			var update_user_avg = client.query('UPDATE features '
 												+ `SET ${attribute} = ${new_mean} `
 												+ `WHERE username = '${user_to}'`
 											,function(err,results){
