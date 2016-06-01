@@ -231,9 +231,29 @@ router.post('/contribute',function (req,res){
 			done();
 			return res.status(500).json({success:false,data:err});
 		}
-		var query = client.query('INSERT INTO contributions (user_from, user_to, attribute, quantity) '
-								+ `VALUES ('${user_from}','${user_to}','${attribute}',${quantity})`);
-		var data = [];
+		var data = [], query;
+		var check_query = client.query('SELECT * FROM contributions WHERE ' + `user_from = '${user_from}' AND user_to = '${user_to}'`);
+		check_query.on('error',function(err){
+			return res.status(500).json({success:false,data:err});
+		})
+		.on('row',function(row){
+			data.push(row);
+		})
+		.on('end',function(){
+			if(data != null){
+				query = client.query('UPDATE contributions SET value = ' + `${quantity} WHERE user_to = '${user_to}' `
+					+` AND user_from = '${user_from}' AND attribute = '${att}'`);
+			} else {
+				query = client.query('INSERT INTO contributions (user_from, user_to, attribute, quantity) '
+								+ `VALUES ('${user_from}','${user_to}','${attribute}',${quantity})`);	
+			}
+		})
+
+		query.on('error',function(err){
+			return res.statsu(500).json({success:false, data:err});
+		});
+
+		data = [];
 		var update_query = client.query('SELECT quantity FROM contributions '+`WHERE user_to = '${user_to}'`);
 		update_query.on('error',function(err){
 			return res.status(500).json({success:false, data:err})
