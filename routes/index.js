@@ -243,14 +243,19 @@ router.post('/contribute',function (req,res){
 			if(data != null){
 				var query = client.query('UPDATE contributions SET quantity = ' + `${quantity} WHERE user_to = '${user_to}' `
 					+` AND user_from = '${user_from}' AND attribute = '${attribute}'`);
-			} else {
-				var query = client.query('INSERT INTO contributions (user_from, user_to, attribute, quantity) '
-								+ `VALUES ('${user_from}','${user_to}','${attribute}',${quantity})`);	
-			}
 				query.on('error',function(err){
 					console.log("error :" + err);
 					done();
 				});
+			} else {
+				var query = client.query('INSERT INTO contributions (user_from, user_to, attribute, quantity) '
+								+ `VALUES ('${user_from}','${user_to}','${attribute}',${quantity})`);	
+				query.on('error',function(err){
+					console.log("error :" + err);
+					done();
+				});
+			}
+
 		})
 
 		var query_data = [];
