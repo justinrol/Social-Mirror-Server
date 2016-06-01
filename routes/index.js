@@ -58,8 +58,6 @@ router.post('/login',function(req,res){
 			if(data.length == 0){
 				return res.json({success:false}); 
 			} else 
-				var columns = 'username, sessionid, expire_time';
-				var params = `'Steezy','randomString','${time}'`;
 				return res.json({success:true});
 		})
 	})
