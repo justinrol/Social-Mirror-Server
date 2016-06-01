@@ -98,8 +98,33 @@ router.post('/signup',function(req,res) {
 	var columns = 'username, name, encrypted_password, email, gender, age';
 	var params = `'${user.username}','${user.name}','${user.password}','${user.email}','${user.gender}','${user.age}'`
 
-	var query_string = 'INSERT INTO users ( ' + columns + ' ) VALUES ( ' + params + ' )';
-	db_query(query_string,res);
+	
+		pg.connect(connectionString,function(err,client,done){
+		if(err){
+			done(); return res.status(500).json({success:false,data:err});
+		}
+		
+		var data = [];
+	
+		var query = client.query('INSERT INTO users ( ' + columns + ' ) VALUES ( ' + params + ' )');
+		query.on('row',function(row){
+			data.push(row);
+		}).on('end',function(){
+			var name = user.username;
+			var data = [];
+			var vals = `('${name}','honesty' ),('${name}','trust' ),('${name}','fun' ),('${name}','generosity'),('${name}','confience'),('${name}','attitude')`;
+			var feature_query = client.query('INSERT INTO features (username,name) VALUES ' + vals);
+			feature_query.on('error',function(err){
+				return res.status(500).json({success:false,data:err});
+			})
+			.on('row',function(row){
+				data += row;
+			})
+			.on('end',function(){
+				return res.json(data);
+			});
+		});
+	})
 });
 
 router.post('/post',function(req,res){
