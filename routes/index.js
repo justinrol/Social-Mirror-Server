@@ -283,13 +283,8 @@ router.post('/contribute',function (req,res){
 				query.on('error',function(err){
 					// console.log("error :" + err);
 					done();
-				}).on('row',function(row){
-					result += row;
-				}).on('end',function(){
-					// console.log(result);
 				})
-			}
-
+			};
 		})
 
 		var query_data = [];
