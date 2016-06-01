@@ -243,9 +243,10 @@ router.post('/contribute',function (req,res){
 		})
 		.on('end',function(){
 			var new_mean = get_mean(data);
+			console.log("****Mean is : " + new_mean);
 			var update_user_avg = client.query('UPDATE features '
 												+ `SET value = ${new_mean} `
-												+ `WHERE username = '${user_to}' AND name = '${attribute}'`
+												+ `WHERE username = '${user_to}' AND name = '${attribute}'`	
 											,function(err,results){
 												if(err) {	
 													return res.status(400).json({success:false});
