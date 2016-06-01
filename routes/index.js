@@ -248,6 +248,7 @@ router.post('/contribute',function (req,res){
 								+ `VALUES ('${user_from}','${user_to}','${attribute}',${quantity})`);	
 			}
 				query.on('error',function(err){
+					console.log("error :" + err);
 					done();
 				});
 		})
@@ -262,6 +263,7 @@ router.post('/contribute',function (req,res){
 		})
 		.on('end',function(){
 			var new_mean = get_mean(query_data);
+			console.log("Query data length : ",query_data.length);
 			var update_user_avg = client.query('UPDATE features '
 												+ `SET value = ${new_mean} , opinions = ${query_data.length} `
 												+ `WHERE username = '${user_to}' AND name = '${attribute}'`	
