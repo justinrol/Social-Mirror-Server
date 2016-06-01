@@ -167,7 +167,7 @@ router.post('/getcustomfeatures',function(req,res){
 
 router.post('/getallfeatures',function(req,res){
 	var d= req.body;
-	var query_string = `SELECT name, value FROM features WHERE username = '${d.username}'`;
+	var query_string = `SELECT name, value, opinions FROM features WHERE username = '${d.username}'`;
 
 	db_query(query_string,res);
 });
@@ -248,12 +248,11 @@ router.post('/contribute',function (req,res){
 								+ `VALUES ('${user_from}','${user_to}','${attribute}',${quantity})`);	
 			}
 				query.on('error',function(err){
-					console.log("error : " + err);
-					res.status(500).json({success:false, data:err});
+					done();
 				});
 		})
 
-		var query_data
+		var query_data = [];
 		var update_query = client.query('SELECT quantity FROM contributions '+`WHERE user_to = '${user_to}'`);
 		update_query.on('error',function(err){
 			return res.status(500).json({success:false, data:err})
@@ -262,11 +261,9 @@ router.post('/contribute',function (req,res){
 			query_data.push(row);
 		})
 		.on('end',function(){
-			console.log("Query data: " + query_data);
 			var new_mean = get_mean(query_data);
-			console.log("****Mean is : " + new_mean);
 			var update_user_avg = client.query('UPDATE features '
-												+ `SET value = ${new_mean} `
+												+ `SET value = ${new_mean} , opinions = ${query_data.length} `
 												+ `WHERE username = '${user_to}' AND name = '${attribute}'`	
 											,function(err,results){
 												if(err) {	
