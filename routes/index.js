@@ -248,7 +248,7 @@ router.post('/contribute',function (req,res){
 								+ `VALUES ('${user_from}','${user_to}','${attribute}',${quantity})`);	
 			}
 				query.on('error',function(err){
-					return res.statsu(500).json({success:false, data:err});
+					return res.status(500).json({success:false, data:err});
 				});
 		})
 
