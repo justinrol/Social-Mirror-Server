@@ -17,7 +17,7 @@ var db_query = function(query_string,res){
 			done(); return res.status(500).json({ success : false , data : err });
 		}
 
-		var response = [];
+		var data = [];
 		var query = client.query(`${query_string}`);
 		
 		console.log(query_string);
@@ -25,9 +25,10 @@ var db_query = function(query_string,res){
 		query.on('error',function(err){
 				return res.status(500).json({success:false,data:err});
 			}).on('row',function(row){
-				response.push(row);
+				data.push(row);
 			}).on('end',function(){
-				return res.json({success:true,data:response});
+				done();
+				return res.json(data);
 			});
 	})
 }
@@ -59,6 +60,7 @@ router.post('/login',function(req,res){
 				return res.json({success:false}); 
 			} else 
 				return res.json({success:true});
+
 		})
 	})
 })
