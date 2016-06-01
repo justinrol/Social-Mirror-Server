@@ -242,7 +242,7 @@ router.post('/contribute',function (req,res){
 		.on('end',function(){
 			if(data != null){
 				var query = client.query('UPDATE contributions SET value = ' + `${quantity} WHERE user_to = '${user_to}' `
-					+` AND user_from = '${user_from}' AND attribute = '${att}'`);
+					+` AND user_from = '${user_from}' AND attribute = '${attribute}'`);
 			} else {
 				var query = client.query('INSERT INTO contributions (user_from, user_to, attribute, quantity) '
 								+ `VALUES ('${user_from}','${user_to}','${attribute}',${quantity})`);	
